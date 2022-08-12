@@ -91,9 +91,13 @@ static PPMImage *readPPM() {
 
 void Histogram(PPMImage *image, float *h) {
 
-	int i, j,  k, l, x, count;
+	int i, j,  k, l, x, count, rank, numprocs;
 	int rows, cols;
-
+	
+	MPI_Init(&argc, &argv);
+	MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);	
+		
 	float n = image->y * image->x;  /* Total de pixels da imagem */
 
 	cols = image->x;
@@ -128,12 +132,17 @@ void Histogram(PPMImage *image, float *h) {
 			}
 		}
 	}
+	MPI_Finalize();
 }
 
 int main(int argc, char *argv[]) {
 
 	int i;
-
+	
+	MPI_Init(&argc, &argv);
+        MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
+        MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	
 	PPMImage *image = readPPM();
         /* Aloca memória para o vetor do histograma */
 	float *h = (float*)malloc(sizeof(float) * 64);
@@ -152,6 +161,7 @@ int main(int argc, char *argv[]) {
 	}
 	printf("\n");
 	free(h);
-
+	
+	MPI_Finalize();
 	return 0;
 }
