@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
 
 
 	while (tam > 0) {
-
+                #pragma omp parallel for
 		for (c = 0; c < LENGTH-1; c++) {
 
 			str[c] = 33 + (rand() % 94);
