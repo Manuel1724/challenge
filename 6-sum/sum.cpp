@@ -1,5 +1,7 @@
 #include <iostream>
 #include <sstream>
+#include <omp.h>
+#include "mpi.h"
 
 using namespace std;
 
