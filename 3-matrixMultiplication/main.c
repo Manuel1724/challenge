@@ -38,8 +38,9 @@ int main(int argc, char **argv){
 		fprintf(stderr, "Out of memory!\n");
 		exit(EXIT_FAILURE);
 	}
-	
+	#pragma omp parallel for private(i)
 	for(i = 0; i < n; i++)
+                #pragma omp parallel for private(j)
 		for(j = 0; j < n; j++){
 			A[i * n + j] = 1;
 			B[i * n + j] = 1;
@@ -53,6 +54,7 @@ int main(int argc, char **argv){
 	elapsed = end - start;
 
 	is_ok = 1;	
+        #pragma omp parallel for private(i,j)
 	for(i = 0; i < n; i++)
 		for(j = 0; j < n; j++)
 			if(C[i * n + j] != (double) n){
