@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include <time.h>
-
+#include <omp.h>
 
 
 #define LENGTH 8
