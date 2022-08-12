@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <openssl/md5.h>
 #include <string.h>
+#include <omp.h>
+#include "mpi.h"
 
 #define MAX 10
 
@@ -14,7 +16,8 @@ char letters[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 */
 void print_digest(byte * hash){
 	int x;
-
+	
+	#pragma omp parallel for
 	for(x = 0; x < MD5_DIGEST_LENGTH; x++)
         	printf("%02x", hash[x]);
 	printf("\n");
@@ -30,6 +33,7 @@ void iterate(byte * hash1, byte * hash2, char *str, int idx, int len, int *ok) {
 	if(*ok) return;
 	if (idx < (len - 1)) {
 		// Iterate for all letter combination.
+		#pragma omp parallel for
 		for (c = 0; c < strlen(letters) && *ok==0; ++c) {
 			str[idx] = letters[c];
 			// Recursive call
@@ -37,6 +41,7 @@ void iterate(byte * hash1, byte * hash2, char *str, int idx, int len, int *ok) {
 		}
 	} else {
 		// Include all last letters and compare the hashes.
+		#pragma omp parallel for
 		for (c = 0; c < strlen(letters) && *ok==0; ++c) {
 			str[idx] = letters[c];
 			MD5((byte *) str, strlen(str), hash2);
@@ -56,6 +61,7 @@ void strHex_to_byte(char * str, byte * hash){
 	char * pos = str;
 	int i;
 
+	#pragma omp parallel for reduction ( + : pos )
 	for (i = 0; i < MD5_DIGEST_LENGTH/sizeof *hash; i++) {
 		sscanf(pos, "%2hhx", &hash[i]);
 		pos += 2;
@@ -88,6 +94,8 @@ int main(int argc, char **argv) {
 	//print_digest(hash1);
 
 	// Generate all possible passwords of different sizes.
+	
+	#pragma omp parallel for private (len)
 	for(len = 1; len <= lenMax; len++){
 		memset(str, 0, len+1);
 		iterate(hash1, hash2, str, 0, len, &ok);
