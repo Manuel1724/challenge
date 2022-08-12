@@ -5,7 +5,6 @@
 #include <stdbool.h>
 #include <omp.h>
 
-
 bool primo (int n) {
         int i;
 	bool primo_bool = true;
