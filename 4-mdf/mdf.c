@@ -5,7 +5,7 @@
 #include <string.h>
 #include <math.h>
 #define STABILITY 1.0f/sqrt(3.0f)
-
+#include <omp.h>
 
 void mdf_heat(double ***  __restrict__ u0, 
               double ***  __restrict__ u1, 
@@ -21,9 +21,12 @@ void mdf_heat(double ***  __restrict__ u0,
     register unsigned int steps = 0;
     while (continued){
       steps++;
+             #pragma omp parallel for 
               for (unsigned int i = 0; i < npZ; i++){
                 for (unsigned int j = 0; j < npY; j++){
                   for (unsigned int k = 0; k < npX; k++){
+                      
+                      #pragma omp atomic 
                       register double left   = boundaries;
                       register double right  = boundaries;
                       register double up     = boundaries;
@@ -51,7 +54,7 @@ void mdf_heat(double ***  __restrict__ u0,
                       
                       
                       u1[i][j][k] =  alpha * ( top + bottom + up + down + left + right  - (6.0f * u0[i][j][k] )) + u0[i][j][k];
-    
+                   
                   
                   }
                 }
@@ -77,9 +80,7 @@ void mdf_heat(double ***  __restrict__ u0,
       
     }
   
-    fprintf(stdout, "%u\n", steps);
-    
-                
+   fprintf(stdout, "%u\n", steps);
 }
 int main (int ac, char **av){
   double ***u0;
