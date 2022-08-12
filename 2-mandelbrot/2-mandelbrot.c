@@ -12,7 +12,6 @@ void timestamp ( );
 
 /******************************************************************************/
 
-int main ( )
 
 /******************************************************************************/
 /*
@@ -41,6 +40,8 @@ Local Parameters:
 Local, int COUNT_MAX, the maximum number of iterations taken
 for a particular pixel.
 */
+
+int main ( )
 {
 	int N = 2048;
 	int m = N;
