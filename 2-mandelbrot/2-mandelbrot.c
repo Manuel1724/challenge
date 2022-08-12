@@ -103,6 +103,7 @@ int main ( )
 /*
 Carry out the iteration for each pixel, determining COUNT.
 */
+	        #pragma omp parallel for private(i,j,k)
 		for ( i = 0; i < m; i++ )
 		{
 			y = ( ( double ) (     i - 1 ) * y_max   
