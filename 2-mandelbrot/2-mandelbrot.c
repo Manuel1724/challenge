@@ -4,6 +4,7 @@
 # include <time.h>
 
 # include <omp.h>
+# include "mpi.h"
 
 int main ( );
 int i4_min ( int i1, int i2 );
@@ -229,9 +230,7 @@ Output, int I4_MIN, the smaller of I1 and I2.
 	}
 	return value;
 }
-/******************************************************************************/
 
-void timestamp ( )
 
 /******************************************************************************/
 /*
@@ -255,6 +254,7 @@ Parameters:
 
 None
 */
+void timestamp ()
 {
 # define TIME_SIZE 40
 
